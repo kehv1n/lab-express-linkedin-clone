@@ -4,9 +4,15 @@ var favicon      = require('serve-favicon');
 var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
+const mongoose = require('mongoose');
+const layout = require('express-ejs-layouts');
+
+mongoose.connect('mongodb://localhost/linkedinapp');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+const auth = require('./routes/auth.js');
+
 
 var app = express();
 
@@ -21,9 +27,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(layout);
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/', auth);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
